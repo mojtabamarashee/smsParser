@@ -43,13 +43,18 @@ export default class App extends Component<Props> {
   }
 
   componentDidMount() {
-    requestReadSmsPermission();
+    //requestReadSmsPermission();
 
-    RNFetchBlob.fs.mkdir('testFsBlob')
-    .then(console.log("dir created"));
+	const dirs = RNFetchBlob.fs.dirs;
 
-    RNFetchBlob.fs.writeFile('testFsBlob.txt', 'foo', 'utf8')
-    .then(console.log("file created"));
+	  RNFetchBlob.fs.mkdir(dirs.DownloadDir + '/../testFsBlob')
+    .then(console.log("dir created"))
+	.catch((err) => {this.setState({mes: err.toString()})})
+
+
+	  RNFetchBlob.fs.writeFile(dirs.DownloadDir + '/../testFsBlob.txt', 'foo', 'utf8')
+    .then(console.log("file created"))
+	 .catch((err) => {this.setState({mes: err.toString()})})
 
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
