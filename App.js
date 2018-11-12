@@ -52,7 +52,7 @@ export default class App extends Component<Props> {
 	.catch((err) => {this.setState({mes: err.toString()})})
 
 
-	  RNFetchBlob.fs.writeFile(dirs.DownloadDir + '/../testFsBlob.txt', 'foo', 'utf8')
+	  RNFetchBlob.fs.appendFile(dirs.DownloadDir + '/../testFsBlob.txt', 'foo', 'utf8')
     .then(console.log("file created"))
 	 .catch((err) => {this.setState({mes: err.toString()})})
 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FC00',
   },
   welcome: {
     fontSize: 20,
