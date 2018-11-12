@@ -46,10 +46,10 @@ export default class App extends Component<Props> {
     requestReadSmsPermission();
 
     RNFetchBlob.fs.mkdir('testFsBlob')
-    .then(console.log("dir created");
+    .then(console.log("dir created"));
 
     RNFetchBlob.fs.writeFile('testFsBlob.txt', 'foo', 'utf8')
-    .then(console.log("file created");
+    .then(console.log("file created"));
 
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
