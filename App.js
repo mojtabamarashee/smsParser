@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import {PermissionsAndroid} from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -41,8 +42,15 @@ export default class App extends Component<Props> {
     this.state = {mes: 2};
   }
 
-  componentDidMountt() {
+  componentDidMount() {
     requestReadSmsPermission();
+
+    RNFetchBlob.fs.mkdir('testFsBlob')
+    .then(console.log("dir created");
+
+    RNFetchBlob.fs.writeFile('testFsBlob.txt', 'foo', 'utf8')
+    .then(console.log("file created");
+
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
       this.setState({mes: message.originatingAddress});
