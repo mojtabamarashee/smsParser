@@ -3,6 +3,7 @@ package com.smsparser;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.react.SmsPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.centaurwarchief.smslistener.SmsListenerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SmsPackage(),
             new RNFetchBlobPackage(),
             new SmsListenerPackage()
       );

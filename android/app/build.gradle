@@ -149,6 +149,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-get-sms-android')
     compile project(':rn-fetch-blob')
     compile project(':react-native-android-sms-listener')
     implementation fileTree(dir: "libs", include: ["*.jar"])

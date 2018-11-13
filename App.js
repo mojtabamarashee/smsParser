@@ -11,6 +11,7 @@ import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import { PermissionsAndroid } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import SmsAndroid  from 'react-native-get-sms-android';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -62,10 +63,45 @@ export default class App extends Component<Props> {
       this.setState({ mes: `from : ${message.originatingAddress}Nums : ${matches}` });
     });
 
+	  this.setState({mes:'sa'});
     this.timer = setInterval(() => {
-      Alert.alert('I do not leak!');
-      this.CreateFile();
+      console.log('I do not leak!');
+      //this.CreateFile();
+	//	this.setState({mes:'sa'});
     }, 1000);
+
+
+	  var filter = {
+    box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+    // the next 4 filters should NOT be used together, they are OR-ed so pick one
+    //read: 0, // 0 for unread SMS, 1 for SMS already read
+    //_id: 1234, // specify the msg id
+    //address: '+1888------', // sender's phone number
+    //body: 'How are you', // content to match
+    // the next 2 filters can be used for pagination
+    //indexFrom: 0, // start from index 0
+    //ismaxCount: 10, // count of SMS to return each time
+	  };
+
+	  this.setState({mes:'sa'});
+	  SmsAndroid.list(JSON.stringify(filter), (fail) => {
+        console.log("Failed with this error: " + fail)
+    },
+    (count, smsList) => {
+        console.log('Count: ', count);
+        console.log('List: ', smsList);
+        var arr = JSON.parse(smsList);
+		this.setState({mes:smsList});
+
+        arr.forEach((object)=>{
+            console.log("-->" + object.date);
+            console.log("-->" + object.body);
+        })
+    });
+
+
+
+
   }
 
   componentWillUnmount() {
