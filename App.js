@@ -6,7 +6,7 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, Alert } from 'react-native';
 import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import { PermissionsAndroid } from 'react-native';
@@ -63,7 +63,7 @@ export default class App extends Component<Props> {
     });
 
     this.timer = setInterval(() => {
-      console.log('I do not leak!');
+      Alert.alert('I do not leak!');
       this.CreateFile();
     }, 1000);
   }
@@ -91,7 +91,7 @@ export default class App extends Component<Props> {
       millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
     setTimeout(() => {
-      alert("It's 10am!");
+      Alert.alert("It's 10am!");
     }, millisTill10);
   };
 
