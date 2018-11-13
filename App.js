@@ -11,7 +11,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import {PermissionsAndroid} from 'react-native';
-import RNFetchBlob from 'rn-fetch-blob'
+import RNFetchBlob from 'rn-fetch-blob';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -45,16 +45,21 @@ export default class App extends Component<Props> {
   componentDidMount() {
     //requestReadSmsPermission();
 
-	const dirs = RNFetchBlob.fs.dirs;
+    const dirs = RNFetchBlob.fs.dirs;
 
-	  RNFetchBlob.fs.mkdir(dirs.DownloadDir + '/../testFsBlob')
-    .then(console.log("dir created"))
-	.catch((err) => {this.setState({mes: err.toString()})})
+    RNFetchBlob.fs
+      .mkdir(dirs.DownloadDir + '/../testFsBlob')
+      .then(console.log('dir created'))
+      .catch(err => {
+        this.setState({mes: err.toString()});
+      });
 
-
-	  RNFetchBlob.fs.appendFile(dirs.DownloadDir + '/../testFsBlob.txt', 'foo', 'utf8')
-    .then(console.log("file created"))
-	 .catch((err) => {this.setState({mes: err.toString()})})
+    RNFetchBlob.fs
+      .appendFile(dirs.DownloadDir + '/../testFsBlob.txt', 'foo', 'utf8')
+      .then(console.log('file created'))
+      .catch(err => {
+        this.setState({mes: err.toString()});
+      });
 
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
