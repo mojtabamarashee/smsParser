@@ -29,6 +29,9 @@ module.exports = {
         ],
         "semi": [
           1
+        ],
+        "arrow-parens": [
+          1
         ]
     }
 };

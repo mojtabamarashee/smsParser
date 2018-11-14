@@ -11,7 +11,8 @@ import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import { PermissionsAndroid } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
-import SmsAndroid  from 'react-native-get-sms-android';
+import SmsAndroid from 'react-native-get-sms-android';
+import { List, ListItem } from 'react-native-elements';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -40,11 +41,12 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { mes: 2 };
+    this.state = { list: { body: 'body', date: '1' } };
   }
 
   componentDidMount() {
     requestReadSmsPermission();
+    const { list } = this.state;
 
     const { dirs } = RNFetchBlob.fs;
 
@@ -52,56 +54,52 @@ export default class App extends Component<Props> {
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
       .catch(err => {
-        this.setState({ mes: err.toString() });
+        this.setState({ list: [list, { body: err.toString(), date: 'error' }] });
       });
 
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
-      this.setState({ mes: message.originatingAddress });
+      this.setState({ list: message.originatingAddress });
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
-      this.setState({ mes: `from : ${message.originatingAddress}Nums : ${matches}` });
+      this.setState({ list: `from : ${message.originatingAddress}Nums : ${matches}` });
     });
 
-	  this.setState({mes:'sa'});
     this.timer = setInterval(() => {
       console.log('I do not leak!');
-      //this.CreateFile();
-	//	this.setState({mes:'sa'});
+      // this.CreateFile();
+      // this.setState({mes:'sa'});
     }, 1000);
 
+    const filter = {
+      box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+      // the next 4 filters should NOT be used together, they are OR-ed so pick one
+      // read: 0, // 0 for unread SMS, 1 for SMS already read
+      // _id: 1234, // specify the msg id
+      // address: '+1888------', // sender's phone number
+      // body: 'How are you', // content to match
+      // the next 2 filters can be used for pagination
+      // indexFrom: 0, // start from index 0
+      // ismaxCount: 10, // count of SMS to return each time
+    };
 
-	  var filter = {
-    box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-    // the next 4 filters should NOT be used together, they are OR-ed so pick one
-    //read: 0, // 0 for unread SMS, 1 for SMS already read
-    //_id: 1234, // specify the msg id
-    //address: '+1888------', // sender's phone number
-    //body: 'How are you', // content to match
-    // the next 2 filters can be used for pagination
-    //indexFrom: 0, // start from index 0
-    //ismaxCount: 10, // count of SMS to return each time
-	  };
-
-	  this.setState({mes:'sa'});
-	  SmsAndroid.list(JSON.stringify(filter), (fail) => {
-        console.log("Failed with this error: " + fail)
-    },
-    (count, smsList) => {
+    SmsAndroid.list(
+      JSON.stringify(filter),
+      fail => {
+        console.log(`Failed with this error: ${fail}`);
+      },
+      (count, smsList) => {
         console.log('Count: ', count);
         console.log('List: ', smsList);
-        var arr = JSON.parse(smsList);
-		this.setState({mes:smsList});
+        const arr = JSON.parse(smsList);
 
-        arr.forEach((object)=>{
-            console.log("-->" + object.date);
-            console.log("-->" + object.body);
-        })
-    });
-
-
-
-
+        arr.forEach(object => {
+          this.setState({ list: [...list, { body: object.toString(), date: object.date }] });
+          console.log(`-->${object.date}`);
+          console.log(`-->${object.body}`);
+        });
+      },
+    );
   }
 
   componentWillUnmount() {
@@ -116,7 +114,8 @@ export default class App extends Component<Props> {
       .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, 'foo', 'utf8')
       .then(console.log('file created'))
       .catch(err => {
-        this.setState({ mes: err.toString() });
+        console.log(err);
+        // this.setState({ mes: err.toString() });
       });
   };
 
@@ -132,6 +131,7 @@ export default class App extends Component<Props> {
   };
 
   render() {
+    const { list } = this.state;
     return (
       <View style={styles.container}>
         <Button
@@ -141,9 +141,11 @@ export default class App extends Component<Props> {
           accessibilityLabel="Learn more about this purple button"
         />
 
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>{this.state.mes}</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <List containerStyle={{ marginBottom: 20 }}>
+          {list.map(l => (
+            <ListItem roundAvatar key={l.date} title={l.body} />
+          ))}
+        </List>
       </View>
     );
   }
