@@ -7,7 +7,7 @@
 /* eslint no-unused-vars: 1 */
 import React, { Component } from 'react';
 import {
-  Platform, StyleSheet, Text, View, Alert, ScrollView, FlatList
+  Platform, StyleSheet, Text, View, Alert, ScrollView,
 } from 'react-native';
 import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
@@ -38,25 +38,6 @@ async function requestReadSmsPermission() {
     console.warn(err);
   }
 }
-
-
-class MyListItem extends React.PureComponent {
-  _onPress = () => {
-    this.props.onPressItem(this.props.id);
-  };
-
-  render() {
-    const textColor = this.props.selected ? "red" : "red";
-    return (
-        <View>
-          <Text style={{ color: textColor }}>
-            {this.props.title}
-          </Text>
-        </View>
-    );
-  }
-}
-
 
 export default class App extends Component<Props> {
   constructor(props) {
@@ -148,22 +129,15 @@ export default class App extends Component<Props> {
 
   render() {
     const { smsList } = this.state;
-	 let _renderItem = ({item}) => (
-    <MyListItem
-      id={item.id}
-      title={item.body}
-    />
-  );
-	  _keyExtractor = (item, index) => index;
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
-		<FlatList
-			data={smsList}
-			extraData={this.state}
-			keyExtractor={_keyExtractor}
-			renderItem={_renderItem}
-		/>
+          <List containerStyle={{ marginBottom: 20 }}>
+            {smsList.map((l, i) => (
+              <ListItem  title={l.body} />
+            ))}
+          </List>
         </ScrollView>
       </View>
     );
