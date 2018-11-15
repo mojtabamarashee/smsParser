@@ -7,7 +7,7 @@
 /* eslint no-unused-vars: 1 */
 import React, { Component } from 'react';
 import {
-  Platform, StyleSheet, Text, View, Alert, ScrollView,
+  Platform, StyleSheet, Text, View, Alert, ScrollView, FlatList
 } from 'react-native';
 import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
@@ -39,6 +39,25 @@ async function requestReadSmsPermission() {
   }
 }
 
+
+class MyListItem extends React.PureComponent {
+  _onPress = () => {
+    this.props.onPressItem(this.props.id);
+  };
+
+  render() {
+    const textColor = this.props.selected ? "red" : "red";
+    return (
+        <View>
+          <Text style={{ color: textColor }}>
+            {this.props.title}
+          </Text>
+        </View>
+    );
+  }
+}
+
+
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
@@ -66,7 +85,6 @@ export default class App extends Component<Props> {
     this.timer = setInterval(() => {
       console.log('I do not leak!');
       // this.CreateFile();
-      // this.setState({mes:'sa'});
     }, 1000);
 
     const filter = {
@@ -93,6 +111,7 @@ export default class App extends Component<Props> {
         arr.forEach((object) => {
           smsList = [...smsList, { body: object.body, date: object.date }];
           this.AppendFile(object.body);
+			console.log(object.body);
         });
         this.setState({ smsList });
       },
@@ -128,16 +147,23 @@ export default class App extends Component<Props> {
   };
 
   render() {
-    const { list } = this.state;
-
+    const { smsList } = this.state;
+	 let _renderItem = ({item}) => (
+    <MyListItem
+      id={item.id}
+      title={item.body}
+    />
+  );
+	  _keyExtractor = (item, index) => index;
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <List containerStyle={{ marginBottom: 20 }}>
-            {list.map((l, i) => (
-              <ListItem roundAvatar avatar={{ uri: l.avatar_url }} key={l.body} title={l.date} />
-            ))}
-          </List>
+		<FlatList
+			data={smsList}
+			extraData={this.state}
+			keyExtractor={_keyExtractor}
+			renderItem={_renderItem}
+		/>
         </ScrollView>
       </View>
     );
