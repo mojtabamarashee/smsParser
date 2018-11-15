@@ -41,28 +41,28 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { list: { body: 'body', date: '1' } };
+    this.state = { list: [{ body: 'body', date: '1' }] };
   }
 
   componentDidMount() {
     requestReadSmsPermission();
-    const { list } = this.state;
 
+	  let {list} = this.state;
     const { dirs } = RNFetchBlob.fs;
 
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
       .catch(err => {
-        this.setState({ list: [list, { body: err.toString(), date: 'error' }] });
+        //this.setState({ list: [list, { body: err.toString(), date: 'error' }] });
       });
 
     this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
-      this.setState({ list: message.originatingAddress });
+      //this.setState({ list: message.originatingAddress });
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
-      this.setState({ list: `from : ${message.originatingAddress}Nums : ${matches}` });
+      //this.setState({ list: `from : ${message.originatingAddress}Nums : ${matches}` });
     });
 
     this.timer = setInterval(() => {
@@ -94,10 +94,11 @@ export default class App extends Component<Props> {
         const arr = JSON.parse(smsList);
 
         arr.forEach(object => {
-          this.setState({ list: [...list, { body: object.toString(), date: object.date }] });
+			list = [...list, { body: count, date: object.date }]
           console.log(`-->${object.date}`);
           console.log(`-->${object.body}`);
         });
+		  this.setState({ list:list });
       },
     );
   }
@@ -132,21 +133,22 @@ export default class App extends Component<Props> {
 
   render() {
     const { list } = this.state;
+
+
     return (
-      <View style={styles.container}>
-        <Button
-          onPress={this.componentDidMount}
-          title="Learn More"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
 
         <List containerStyle={{ marginBottom: 20 }}>
-          {list.map(l => (
-            <ListItem roundAvatar key={l.date} title={l.body} />
-          ))}
+          {list.map((l,i) => {
+			  return(<ListItem 
+
+				  roundAvatar
+        avatar={{uri:l.avatar_url}}
+        key={l.body}
+        title={l.body}
+
+				  />
+          )})}
         </List>
-      </View>
     );
   }
 }
