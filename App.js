@@ -92,7 +92,7 @@ export default class App extends Component<Props> {
         arr.forEach((object) => {
           smsList = [...smsList, { body: object.body, date: object.date }];
           this.AppendFile(object.body);
-			console.log(object.body);
+			//console.log(object.body);
         });
         this.setState({ smsList });
       },
@@ -111,7 +111,7 @@ export default class App extends Component<Props> {
       .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
       .then(console.log('file append'))
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         // this.setState({ mes: err.toString() });
       });
   };
