@@ -32,6 +32,10 @@ module.exports = {
         ],
         "arrow-parens": [
           1
-        ]
+        ],
+
+        "max-len": [
+          1, {"code":120}],
+
     }
 };

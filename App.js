@@ -4,9 +4,11 @@
  *
  * @flow
  */
-
+/* eslint no-unused-vars: 1 */
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Alert } from 'react-native';
+import {
+  Platform, StyleSheet, Text, View, Alert, ScrollView,
+} from 'react-native';
 import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import { PermissionsAndroid } from 'react-native';
@@ -41,28 +43,24 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { list: [{ body: 'body', date: '1' }] };
+    this.state = { smsList: [{ body: 'body', date: '1' }] };
   }
 
   componentDidMount() {
     requestReadSmsPermission();
 
-	  let {list} = this.state;
     const { dirs } = RNFetchBlob.fs;
 
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
-      .catch(err => {
-        //this.setState({ list: [list, { body: err.toString(), date: 'error' }] });
+      .catch((err) => {
       });
 
-    this.SMSReadSubscription = SmsListener.addListener(message => {
+    this.SMSReadSubscription = SmsListener.addListener((message) => {
       console.log('Message:', message);
-      //this.setState({ list: message.originatingAddress });
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
-      //this.setState({ list: `from : ${message.originatingAddress}Nums : ${matches}` });
     });
 
     this.timer = setInterval(() => {
@@ -83,22 +81,20 @@ export default class App extends Component<Props> {
       // ismaxCount: 10, // count of SMS to return each time
     };
 
+    let { smsList } = this.state;
     SmsAndroid.list(
       JSON.stringify(filter),
-      fail => {
+      (fail) => {
         console.log(`Failed with this error: ${fail}`);
       },
-      (count, smsList) => {
-        console.log('Count: ', count);
-        console.log('List: ', smsList);
-        const arr = JSON.parse(smsList);
+      (count, sms) => {
+        const arr = JSON.parse(sms);
 
-        arr.forEach(object => {
-			list = [...list, { body: count, date: object.date }]
-          console.log(`-->${object.date}`);
-          console.log(`-->${object.body}`);
+        arr.forEach((object) => {
+          smsList = [...smsList, { body: object.body, date: object.date }];
+          this.AppendFile(object.body);
         });
-		  this.setState({ list:list });
+        this.setState({ smsList });
       },
     );
   }
@@ -109,12 +105,12 @@ export default class App extends Component<Props> {
     clearInterval(this.timer);
   }
 
-  CreateFile = () => {
+  AppendFile = (data) => {
     const { dirs } = RNFetchBlob.fs;
     RNFetchBlob.fs
-      .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, 'foo', 'utf8')
-      .then(console.log('file created'))
-      .catch(err => {
+      .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
+      .then(console.log('file append'))
+      .catch((err) => {
         console.log(err);
         // this.setState({ mes: err.toString() });
       });
@@ -127,28 +123,23 @@ export default class App extends Component<Props> {
       millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
     setTimeout(() => {
-      Alert.alert("It's 10am!");
+      Alert.alert('It\'s 10am!');
     }, millisTill10);
   };
 
   render() {
     const { list } = this.state;
 
-
     return (
-
-        <List containerStyle={{ marginBottom: 20 }}>
-          {list.map((l,i) => {
-			  return(<ListItem 
-
-				  roundAvatar
-        avatar={{uri:l.avatar_url}}
-        key={l.body}
-        title={l.body}
-
-				  />
-          )})}
-        </List>
+      <View style={{ flex: 1 }}>
+        <ScrollView>
+          <List containerStyle={{ marginBottom: 20 }}>
+            {list.map((l, i) => (
+              <ListItem roundAvatar avatar={{ uri: l.avatar_url }} key={l.body} title={l.date} />
+            ))}
+          </List>
+        </ScrollView>
+      </View>
     );
   }
 }
