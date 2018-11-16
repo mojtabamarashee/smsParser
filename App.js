@@ -6,12 +6,19 @@
  */
 /* eslint no-unused-vars: 1 */
 import React, { Component } from 'react';
+import Row from './Components/Row.js';
 import {
-  Platform, StyleSheet, Text, View, Alert, ScrollView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  ScrollView,
+  FlatList,
+  Button,
+  PermissionsAndroid,
 } from 'react-native';
-import { Button } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
-import { PermissionsAndroid } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
 import { List, ListItem } from 'react-native-elements';
@@ -39,6 +46,7 @@ async function requestReadSmsPermission() {
   }
 }
 
+
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
@@ -54,17 +62,16 @@ export default class App extends Component<Props> {
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
-      .catch((err) => {
-      });
+      .catch(err => {});
 
-    this.SMSReadSubscription = SmsListener.addListener((message) => {
+    this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
     });
 
     this.timer = setInterval(() => {
-      console.log('I do not leak!');
+      //console.log('I do not leak!');
       // this.CreateFile();
     }, 1000);
 
@@ -83,19 +90,19 @@ export default class App extends Component<Props> {
     let { smsList } = this.state;
     SmsAndroid.list(
       JSON.stringify(filter),
-      (fail) => {
+      fail => {
         console.log(`Failed with this error: ${fail}`);
       },
       (count, sms) => {
         const arr = JSON.parse(sms);
 
-        arr.forEach((object) => {
+        arr.forEach(object => {
           smsList = [...smsList, { body: object.body, date: object.date }];
           this.AppendFile(object.body);
-			//console.log(object.body);
+          console.log(object.body);
         });
         this.setState({ smsList });
-      },
+      }
     );
   }
 
@@ -105,13 +112,13 @@ export default class App extends Component<Props> {
     clearInterval(this.timer);
   }
 
-  AppendFile = (data) => {
+  AppendFile = data => {
     const { dirs } = RNFetchBlob.fs;
     RNFetchBlob.fs
       .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
       .then(console.log('file append'))
-      .catch((err) => {
-        //console.log(err);
+      .catch(err => {
+        console.log(err);
         // this.setState({ mes: err.toString() });
       });
   };
@@ -123,21 +130,18 @@ export default class App extends Component<Props> {
       millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
     setTimeout(() => {
-      Alert.alert('It\'s 10am!');
+      Alert.alert("It's 10am!");
     }, millisTill10);
   };
 
   render() {
     const { smsList } = this.state;
-
+    const _renderItem = ({ item }) => <Row id={item.id} title={item.body} />;
+    _keyExtractor = (item, index) => index;
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <List containerStyle={{ marginBottom: 20 }}>
-            {smsList.map((l, i) => (
-              <ListItem  title={l.body} />
-            ))}
-          </List>
+          <FlatList  data={smsList} extraData={this.state} keyExtractor={_keyExtractor} renderItem={_renderItem} />
         </ScrollView>
       </View>
     );
