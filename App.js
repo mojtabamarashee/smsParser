@@ -161,7 +161,7 @@ export default class App extends Component<Props> {
       },
       (count, sms) => {
         const arr = JSON.parse(sms);
-
+		  let smsList = [];
         arr.forEach((object) => {
           smsList = [...smsList, { body: object.body, date: object.date }];
           // this.AppendFile(object.body);
