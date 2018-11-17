@@ -6,7 +6,6 @@
  */
 /* eslint no-unused-vars: 1 */
 import React, { Component } from 'react';
-import Row from './Components/Row.js';
 import {
   Platform,
   StyleSheet,
@@ -17,11 +16,13 @@ import {
   FlatList,
   Button,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
-import { List, ListItem } from 'react-native-elements';
+import { List, ListItem, SearchBar } from 'react-native-elements';
+import Row from './Components/Row.js';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -46,12 +47,12 @@ async function requestReadSmsPermission() {
   }
 }
 
-
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { smsList: [{ body: 'body', date: '1' }] };
+    this.state = { smsList: [{ body: 'body', date: '1' }], refreshing: false, loading: false };
+    this.arrayholder = [];
   }
 
   componentDidMount() {
@@ -62,19 +63,83 @@ export default class App extends Component<Props> {
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
-      .catch(err => {});
+      .catch((err) => {});
 
-    this.SMSReadSubscription = SmsListener.addListener(message => {
+    this.SMSReadSubscription = SmsListener.addListener((message) => {
       console.log('Message:', message);
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
     });
 
     this.timer = setInterval(() => {
-      //console.log('I do not leak!');
+      // console.log('I do not leak!');
       // this.CreateFile();
-    }, 1000);
+    }, 1000000);
 
+    this.GetSms();
+  }
+
+  componentWillUnmount() {
+    // remove listener
+    this.SMSReadSubscription.remove();
+    clearInterval(this.timer);
+  }
+
+  AppendFile = (data) => {
+    const { dirs } = RNFetchBlob.fs;
+    RNFetchBlob.fs
+      .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
+      .then(console.log('file append'))
+      .catch((err) => {
+        console.log(err);
+        // this.setState({ mes: err.toString() });
+      });
+  };
+
+  RunAt10am = () => {
+    const now = new Date();
+    let millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0, 0, 0) - now;
+    if (millisTill10 < 0) {
+      millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
+    }
+    setTimeout(() => {
+      Alert.alert('It\'s 10am!');
+    }, millisTill10);
+  };
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        refreshing: true,
+      },
+      () => {
+        this.GetSms();
+      },
+    );
+  };
+
+  renderHeader = () => (
+    <SearchBar onChangeText={text => this.searchFilterFunction(text)} placeholder="Type Here..." lightTheme round />
+  );
+
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: '#CED0CE',
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  GetSms = () => {
+    this.setState({ loading: true });
     const filter = {
       box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
       // the next 4 filters should NOT be used together, they are OR-ed so pick one
@@ -90,58 +155,54 @@ export default class App extends Component<Props> {
     let { smsList } = this.state;
     SmsAndroid.list(
       JSON.stringify(filter),
-      fail => {
+      (fail) => {
         console.log(`Failed with this error: ${fail}`);
       },
       (count, sms) => {
         const arr = JSON.parse(sms);
 
-        arr.forEach(object => {
+        arr.forEach((object) => {
           smsList = [...smsList, { body: object.body, date: object.date }];
-          this.AppendFile(object.body);
-          console.log(object.body);
+          // this.AppendFile(object.body);
+          // console.log(object.body);
         });
         this.setState({ smsList });
-      }
+      },
     );
-  }
 
-  componentWillUnmount() {
-    // remove listener
-    this.SMSReadSubscription.remove();
-    clearInterval(this.timer);
-  }
-
-  AppendFile = data => {
-    const { dirs } = RNFetchBlob.fs;
-    RNFetchBlob.fs
-      .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
-      .then(console.log('file append'))
-      .catch(err => {
-        console.log(err);
-        // this.setState({ mes: err.toString() });
-      });
+    this.setSate({ refreshing: false, loading: false });
+    this.arrayholder = smsList;
   };
 
-  RunAt10am = () => {
-    const now = new Date();
-    let millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0, 0, 0) - now;
-    if (millisTill10 < 0) {
-      millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
-    }
-    setTimeout(() => {
-      Alert.alert("It's 10am!");
-    }, millisTill10);
+  searchFilterFunction = (text) => {
+    console.log(this.arrayholder);
+    const newData = this.arrayholder.filter((item) => {
+      const itemData = `${item.body.toUpperCase()} ${item.body.toUpperCase()} ${item.body.toUpperCase()}`;
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      data: newData,
+    });
   };
 
   render() {
-    const { smsList } = this.state;
+    const { smsList, refreshing } = this.state;
     const _renderItem = ({ item }) => <Row id={item.id} title={item.body} />;
-    _keyExtractor = (item, index) => index;
+    const _keyExtractor = (item, index) => index;
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <FlatList  data={smsList} extraData={this.state} keyExtractor={_keyExtractor} renderItem={_renderItem} />
+          <FlatList
+            data={smsList}
+            extraData={this.state}
+            keyExtractor={_keyExtractor}
+            renderItem={_renderItem}
+            onRefresh={this.handleRefresh}
+            refreshing={refreshing}
+            ListHeaderComponent={this.renderHeader}
+            ListFooterComponent={this.renderFooter}
+          />
         </ScrollView>
       </View>
     );
