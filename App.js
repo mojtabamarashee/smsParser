@@ -107,10 +107,11 @@ export default class App extends Component<Props> {
     }, millisTill10);
   };
 
-  handleRefresh = () => {
+  handleRefresh () {
+	  Alert.alert('hi');
     this.setState(
       {
-        refreshing: true,
+       	refreshing: true,
       },
       () => {
         this.GetSms();
@@ -128,9 +129,9 @@ export default class App extends Component<Props> {
     return (
       <View
         style={{
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          borderColor: '#CED0CE',
+          paddingVertical: 200,
+          borderTopWidth: 10,
+          borderColor: '#0000CE',
         }}
       >
         <ActivityIndicator animating size="large" />
@@ -167,27 +168,31 @@ export default class App extends Component<Props> {
           // console.log(object.body);
         });
         this.setState({ smsList });
+		  this.arrayholder = smsList;
       },
     );
 
-    this.setSate({ refreshing: false, loading: false });
-    this.arrayholder = smsList;
+    this.setState({ refreshing: false, loading: false });
   };
 
   searchFilterFunction = (text) => {
     console.log(this.arrayholder);
-    const newData = this.arrayholder.filter((item) => {
+    const newData = this.arrayholder.filter((item, i) => {
+		//Alert.alert(item.body);
       const itemData = `${item.body.toUpperCase()} ${item.body.toUpperCase()} ${item.body.toUpperCase()}`;
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
     this.setState({
-      data: newData,
+      smsList: newData,
     });
   };
 
   render() {
-    const { smsList, refreshing } = this.state;
+    const { smsList } = this.state;
+	 var refreshing = this.state.refreshing
+	  //console.log("refreshing = ", refreshing);
+	  //Alert.alert(refreshing);
     const _renderItem = ({ item }) => <Row id={item.id} title={item.body} />;
     const _keyExtractor = (item, index) => index;
     return (
@@ -198,7 +203,7 @@ export default class App extends Component<Props> {
             extraData={this.state}
             keyExtractor={_keyExtractor}
             renderItem={_renderItem}
-            onRefresh={this.handleRefresh}
+            onRefresh={()=>this.handleRefresh()}
             refreshing={refreshing}
             ListHeaderComponent={this.renderHeader}
             ListFooterComponent={this.renderFooter}
