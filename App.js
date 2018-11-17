@@ -179,7 +179,7 @@ export default class App extends Component<Props> {
     console.log(this.arrayholder);
     const newData = this.arrayholder.filter((item, i) => {
 		//Alert.alert(item.body);
-      const itemData = `${item.body.toUpperCase()} ${item.body.toUpperCase()} ${item.body.toUpperCase()}`;
+      const itemData = `${item.body.toUpperCase()}`;
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
