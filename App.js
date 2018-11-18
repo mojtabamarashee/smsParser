@@ -17,6 +17,7 @@ import {
   Button,
   PermissionsAndroid,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -107,8 +108,9 @@ export default class App extends Component<Props> {
     }, millisTill10);
   };
 
-  handleRefresh () {
-	  Alert.alert('hi');
+  handleRefresh ()  {
+	  Alert.alert('hirere');
+	  this.setState({ smsList:[] });
     this.setState(
       {
        	refreshing: true,
@@ -179,9 +181,9 @@ export default class App extends Component<Props> {
     console.log(this.arrayholder);
     const newData = this.arrayholder.filter((item, i) => {
 		//Alert.alert(item.body);
-      const itemData = `${item.body.toUpperCase()}`;
+      const itemData = item.body.toUpperCase();
       const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
+      return itemData.includes(textData);
     });
     this.setState({
       smsList: newData,
@@ -197,18 +199,24 @@ export default class App extends Component<Props> {
     const _keyExtractor = (item, index) => index;
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
           <FlatList
-            data={smsList}
+            data={this.state.smsList}
             extraData={this.state}
             keyExtractor={_keyExtractor}
             renderItem={_renderItem}
-            onRefresh={()=>this.handleRefresh()}
-            refreshing={refreshing}
+
+
+			refreshControl={
+			  <RefreshControl
+				refreshing={refreshing}
+				progressViewOffset ={50}
+				onRefresh={()=>this.handleRefresh()}
+			  />
+			}
+
             ListHeaderComponent={this.renderHeader}
             ListFooterComponent={this.renderFooter}
           />
-        </ScrollView>
       </View>
     );
   }
