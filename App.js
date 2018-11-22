@@ -20,10 +20,15 @@ import {
   RefreshControl,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
+import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
 import { List, ListItem, SearchBar } from 'react-native-elements';
 import Row from './Components/Row.js';
+import Search from './Components/Search.js';
+import { UPDATE_LIST } from './Components/Actions.js';
+
+const PersianCalendarPicker = require('react-native-persian-calendar-picker');
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -48,25 +53,26 @@ async function requestReadSmsPermission() {
   }
 }
 
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { smsList: [{ body: 'body', date: '1', num: '1' }], refreshing: false, loading: false, count : 0 };
+    this.state = { refreshing: false, loading: false, count: 0 };
     this.arrayholder = [];
   }
 
   componentDidMount() {
     requestReadSmsPermission();
+    const { dispatch } = this.props;
 
     const { dirs } = RNFetchBlob.fs;
 
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
-      .catch(err => {});
+      .catch((err) => {});
 
-    this.SMSReadSubscription = SmsListener.addListener(message => {
+    this.SMSReadSubscription = SmsListener.addListener((message) => {
       console.log('Message:', message);
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
@@ -86,12 +92,12 @@ export default class App extends Component<Props> {
     clearInterval(this.timer);
   }
 
-  AppendFile = data => {
+  AppendFile = (data) => {
     const { dirs } = RNFetchBlob.fs;
     RNFetchBlob.fs
       .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
       .then(console.log('file append'))
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         // this.setState({ mes: err.toString() });
       });
@@ -104,28 +110,28 @@ export default class App extends Component<Props> {
       millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
     setTimeout(() => {
-      Alert.alert("It's 10am!");
+      Alert.alert('It\'s 10am!');
     }, millisTill10);
   };
 
   handleRefresh() {
-    this.setState({ smsList: [] });
+    // this.setState({ smsList: [] });
+    dispatch({ type: UPDATE_LIST, data: [] });
     this.setState(
       {
         refreshing: true,
       },
       () => {
         this.GetSms();
-      }
+      },
     );
   }
 
-  renderHeader = () => (
-	  <View lightTheme>
-    <SearchBar onChangeText={text => this.searchFilterFunction(text)} placeholder="Type Here..." lightTheme round />
-	  <Text style={{ color: 'red', backgroundColor: 'black', fontWeight: 'bold', fontSize: 20, float: 'right', padding : 5}}>total : {this.state.count}</Text>
-	  </View>
-  );
+  onDateChange(date1) {
+    Alert.alert(date1.unix().toString());
+    // date1 = date1.format('jYY/jMM/jDD');
+    // console.log("date1 = ", date1);
+  }
 
   renderFooter = () => {
     if (!this.state.loading) return null;
@@ -144,6 +150,7 @@ export default class App extends Component<Props> {
   };
 
   GetSms = () => {
+    const { dispatch } = this.props;
     this.setState({ loading: true });
     const filter = {
       box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -157,53 +164,56 @@ export default class App extends Component<Props> {
       // ismaxCount: 10, // count of SMS to return each time
     };
 
-    let { smsList } = this.state;
+    const { list } = this.props;
     SmsAndroid.list(
       JSON.stringify(filter),
-      fail => {
+      (fail) => {
         console.log(`Failed with this error: ${fail}`);
       },
       (count, sms) => {
         const arr = JSON.parse(sms);
-        let smsList = [];
-        arr.forEach(object => {
-          smsList = [...smsList, object];
+        let myList = [];
+        arr.forEach((object) => {
+          myList = [...myList, object];
           // this.AppendFile(object.body);
           // console.log(object.body);
         });
-        this.setState({ smsList, count });
-        this.arrayholder = smsList;
-      }
+        // this.setState({ smsList, count });
+        dispatch({ type: UPDATE_LIST, list });
+        this.arrayholder = list;
+      },
     );
 
     this.setState({ refreshing: false, loading: false });
   };
 
-  searchFilterFunction = text => {
-    console.log(this.arrayholder);
+  searchFilterFunction = (text) => {
     const newData = this.arrayholder.filter((item, i) => {
-      //Alert.alert(item.body);
+      // Alert.alert(item.body);
       const itemData = item.body;
       const textData = text;
       return itemData.includes(textData);
     });
-    this.setState({
+    /* this.setState({
       smsList: newData,
-		count: newData.length
-    });
+      count: newData.length,
+    }); */
+    this.props.dispatch({ type: UPDATE_LIST, list: newData });
   };
 
+  renderHeader = () => <Search />;
+
   render() {
-    const { smsList } = this.state;
-    var refreshing = this.state.refreshing;
-    //console.log("refreshing = ", refreshing);
-    //Alert.alert(refreshing);
+    const { list } = this.props;
+    const refreshing = this.state.refreshing;
+    // console.log("refreshing = ", refreshing);
+    // Alert.alert(refreshing);
     const _renderItem = ({ item }) => <Row sms={item} count={this.state.count} />;
     const _keyExtractor = (item, index) => index;
     return (
       <View style={{ flex: 1 }}>
         <FlatList
-          data={this.state.smsList}
+          data={this.props.list}
           extraData={this.state}
           keyExtractor={_keyExtractor}
           renderItem={_renderItem}
@@ -236,3 +246,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+const mapStateToProps = state => ({
+  list: state.list,
+});
+
+export default connect(mapStateToProps)(App);

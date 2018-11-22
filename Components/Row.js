@@ -44,7 +44,7 @@ export default class Row extends React.PureComponent {
 	  let day = new Datee(this.props.sms.date).toLocale('en').format();; 
 	  let read = this.props.sms._id
     onPress = () => {
-      console.log('sfs');
+      //console.log('sfs');
     };
     return (
       <View style={styles.container_text}>
