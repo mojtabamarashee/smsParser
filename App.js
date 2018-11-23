@@ -179,7 +179,7 @@ class App extends Component<Props> {
           // console.log(object.body);
         });
         // this.setState({ smsList, count });
-        dispatch({ type: UPDATE_LIST, list });
+        dispatch({ type: UPDATE_LIST, list:myList });
         this.arrayholder = list;
       },
     );

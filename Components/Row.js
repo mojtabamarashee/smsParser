@@ -1,9 +1,20 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Alert, ScrollView, FlatList, Button } from 'react-native';
-import { ListItem, Icon } from 'react-native-elements';
+import { Platform, StyleSheet, Text, View, Alert, ScrollView, FlatList, Button, TouchableOpacity } from 'react-native';
+import { ListItem, Icon, Divider, Card } from 'react-native-elements';
 import Datee from 'persian-date';
 
 export default class Row extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { show: false };
+  }
+
+  onPress = () => {
+    const { show } = this.state;
+    this.setState({ show: !show });
+    console.log(show);
+  };
+
   render() {
     const styles = StyleSheet.create({
       container: {
@@ -41,27 +52,37 @@ export default class Row extends React.PureComponent {
 
     const textColor = this.props.selected ? 'red' : 'red';
     const { title } = this.props.sms.body;
-	  let day = new Datee(this.props.sms.date).toLocale('en').format();; 
-	  let read = this.props.sms._id
-    onPress = () => {
-      //console.log('sfs');
-    };
-    return (
+    const day = new Datee(this.props.sms.date).toLocale('en').format();
+    const read = this.props.sms._id;
+    return !this.state.show ? (
       <View style={styles.container_text}>
         <ListItem
           titleStyle={{ color: 'blue', fontWeight: 'bold' }}
           subtitleStyle={{ color: 'black' }}
-          onPress={onPress()}
+          onPress={this.onPress}
           Icon={{}}
           title={
-            <View style={{flexDirection: 'row'}} >
-              <Text style={{ color:('blue'), fontWeight: 'bold' , fontSize : 18}}>{this.props.sms.address}</Text>
-			  <Text style={{ color: 'green', float: 'right', marginLeft:50}}>{day}</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: 'blue', fontWeight: 'bold', fontSize: 18 }}>{this.props.sms.address}</Text>
+              <Text style={{ color: 'green', float: 'right', marginLeft: 50 }}>{day}</Text>
             </View>
           }
           subtitle={this.props.sms.body}
         />
       </View>
+    ) : (
+      <Card dividerStyle={null} style={styles.container_text}>
+        <TouchableOpacity onPress={this.onPress}>
+          <View style={{ flexDirection: 'row' }} >
+            <Text style={{ color: 'blue', fontWeight: 'bold', fontSize: 18 }}>{this.props.sms.address}</Text>
+            <Text style={{ color: 'green', float: 'right', marginLeft: 50 }}>{day}</Text>
+          </View>
+          <View>
+            <Text onPress={this.onPress}>{this.props.sms.body}</Text>
+            <Divider style={{ backgroundColor: 'blue' }} />
+          </View>
+        </TouchableOpacity>
+      </Card>
     );
   }
 }
