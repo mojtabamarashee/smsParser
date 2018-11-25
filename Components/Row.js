@@ -62,7 +62,7 @@ export default class Row extends React.PureComponent {
           onPress={this.onPress}
           Icon={{}}
           title={
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', flex :1 }}>
               <Text style={{ color: 'blue', fontWeight: 'bold', fontSize: 18 }}>{this.props.sms.address}</Text>
               <Text style={{ color: 'green', float: 'right', marginLeft: 50 }}>{day}</Text>
             </View>

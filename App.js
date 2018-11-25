@@ -187,19 +187,6 @@ class App extends Component<Props> {
     this.setState({ refreshing: false, loading: false });
   };
 
-  searchFilterFunction = (text) => {
-    const newData = this.arrayholder.filter((item, i) => {
-      // Alert.alert(item.body);
-      const itemData = item.body;
-      const textData = text;
-      return itemData.includes(textData);
-    });
-    /* this.setState({
-      smsList: newData,
-      count: newData.length,
-    }); */
-    this.props.dispatch({ type: UPDATE_LIST, list: newData });
-  };
 
   renderHeader = () => <Search />;
 

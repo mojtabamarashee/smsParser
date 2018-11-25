@@ -25,6 +25,21 @@ export default class Search extends Component {
     this.SetDate1 = this.SetDate1.bind(this);
   }
 
+
+  searchFilterFunction = (text) => {
+    const newData = this.arrayholder.filter((item, i) => {
+      // Alert.alert(item.body);
+      const itemData = item.body;
+      const textData = text;
+      return itemData.includes(textData);
+    });
+    /* this.setState({
+      smsList: newData,
+      count: newData.length,
+    }); */
+    this.props.dispatch({ type: UPDATE_LIST, list: newData });
+  };
+
   SetDate(date) {
     this.setState({ showCal: false });
 	  date1 = date.format('jYY/jMM/jDD');
