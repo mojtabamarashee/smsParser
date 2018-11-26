@@ -52,7 +52,7 @@ export default class Row extends React.PureComponent {
 
     const textColor = this.props.selected ? 'red' : 'red';
     const { title } = this.props.sms.body;
-    const day = new Datee(this.props.sms.date).toLocale('en').format();
+    const day = new Datee(this.props.sms.date).toLocale('en').format('YY/MM/DD');
     const read = this.props.sms._id;
     return !this.state.show ? (
       <View style={styles.container_text}>
