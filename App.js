@@ -27,7 +27,7 @@ import { List, ListItem, SearchBar } from 'react-native-elements';
 import Row from './Components/Row.js';
 import Search from './Components/Search.js';
 import { UPDATE_LIST } from './Components/Actions.js';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 const PersianCalendarPicker = require('react-native-persian-calendar-picker');
 
 const instructions = Platform.select({
@@ -70,9 +70,9 @@ class App extends Component<Props> {
     RNFetchBlob.fs
       .mkdir(`${dirs.DownloadDir}/../testFsBlob`)
       .then(console.log('dir created'))
-      .catch((err) => {});
+      .catch(err => {});
 
-    this.SMSReadSubscription = SmsListener.addListener((message) => {
+    this.SMSReadSubscription = SmsListener.addListener(message => {
       console.log('Message:', message);
       const reg = new RegExp('\\d+');
       const matches = message.body.match(reg);
@@ -92,12 +92,12 @@ class App extends Component<Props> {
     clearInterval(this.timer);
   }
 
-  AppendFile = (data) => {
+  AppendFile = data => {
     const { dirs } = RNFetchBlob.fs;
     RNFetchBlob.fs
       .appendFile(`${dirs.DownloadDir}/../testFsBlob.txt`, data, 'utf8')
       .then(console.log('file append'))
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         // this.setState({ mes: err.toString() });
       });
@@ -110,7 +110,7 @@ class App extends Component<Props> {
       millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
     setTimeout(() => {
-      Alert.alert('It\'s 10am!');
+      Alert.alert("It's 10am!");
     }, millisTill10);
   };
 
@@ -123,7 +123,7 @@ class App extends Component<Props> {
       },
       () => {
         this.GetSms();
-      },
+      }
     );
   }
 
@@ -167,28 +167,44 @@ class App extends Component<Props> {
     const { list } = this.props;
     SmsAndroid.list(
       JSON.stringify(filter),
-      (fail) => {
+      fail => {
         console.log(`Failed with this error: ${fail}`);
       },
       (count, sms) => {
         const arr = JSON.parse(sms);
         let myList = [];
-        arr.forEach((object) => {
+        arr.forEach(object => {
           myList = [...myList, object];
           // this.AppendFile(object.body);
           // console.log(object.body);
         });
         // this.setState({ smsList, count });
-        dispatch({ type: UPDATE_LIST, list:myList });
+        dispatch({ type: UPDATE_LIST, list: myList });
         this.arrayholder = list;
-      },
+      }
     );
 
     this.setState({ refreshing: false, loading: false });
   };
 
-
-  renderHeader = () => <Search />;
+  renderHeader = () => (
+    <Button
+      icon={<Icon name="arrow-right" size={15} color="white" />}
+      title="Inbox"
+      loading
+      loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
+      titleStyle={{ fontWeight: '700' }}
+      buttonStyle={{
+        backgroundColor: 'rgba(92, 99,216, 1)',
+        width: 300,
+        height: 45,
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderRadius: 5,
+      }}
+      containerStyle={{ marginTop: 20 }}
+    />
+  );
 
   render() {
     const { list } = this.props;
