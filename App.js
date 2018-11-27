@@ -14,7 +14,6 @@ import {
   Alert,
   ScrollView,
   FlatList,
-  Button,
   PermissionsAndroid,
   ActivityIndicator,
   RefreshControl,
@@ -23,7 +22,7 @@ import SmsListener from 'react-native-android-sms-listener';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
-import { List, ListItem, SearchBar } from 'react-native-elements';
+import { List, ListItem, SearchBar,Button  } from 'react-native-elements';
 import Row from './Components/Row.js';
 import Search from './Components/Search.js';
 import { UPDATE_LIST } from './Components/Actions.js';
@@ -188,22 +187,22 @@ class App extends Component<Props> {
   };
 
   renderHeader = () => (
-    <Button
-      icon={<Icon name="arrow-right" size={15} color="white" />}
-      title="Inbox"
-      loading
-      loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
-      titleStyle={{ fontWeight: '700' }}
-      buttonStyle={{
-        backgroundColor: 'rgba(92, 99,216, 1)',
-        width: 300,
-        height: 45,
-        borderColor: 'transparent',
-        borderWidth: 0,
-        borderRadius: 5,
-      }}
-      containerStyle={{ marginTop: 20 }}
-    />
+    <View>
+      <Button
+        icon={<Icon name="facebook" size={10} color="black" />}
+        title="Inbox"
+        loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
+        titleStyle={{ fontWeight: '700' }}
+        buttonStyle={{
+          backgroundColor: 'rgba(92, 99,50, 100)',
+          width: 200,
+          height: 45,
+          borderColor: 'transparent',
+          borderWidth: 0,
+        }}
+        containerStyle={{ margin: 20 }}
+      />
+    </View>
   );
 
   render() {
