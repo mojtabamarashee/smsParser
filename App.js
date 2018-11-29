@@ -22,11 +22,11 @@ import SmsListener from 'react-native-android-sms-listener';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
-import { List, ListItem, SearchBar,Button  } from 'react-native-elements';
+import { List, ListItem, SearchBar, Button, ButtonGroup, Icon } from 'react-native-elements';
 import Row from './Components/Row.js';
 import Search from './Components/Search.js';
 import { UPDATE_LIST } from './Components/Actions.js';
-import Icon from 'react-native-vector-icons/FontAwesome';
+//import Icon from 'react-native-vector-icons/FontAwesome';
 const PersianCalendarPicker = require('react-native-persian-calendar-picker');
 
 const instructions = Platform.select({
@@ -56,8 +56,9 @@ class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { refreshing: false, loading: false, count: 0 };
+    this.state = { refreshing: false, loading: false, count: 0, selectedIndex: 0 };
     this.arrayholder = [];
+    this.SetSelected = this.SetSelected.bind(this);
   }
 
   componentDidMount() {
@@ -186,16 +187,52 @@ class App extends Component<Props> {
     this.setState({ refreshing: false, loading: false });
   };
 
+  SetSelected(index) {
+    this.setState({ selectedIndex: index });
+  }
+
   renderHeader = () => (
     <View>
+      <Icon name="rocket" color="#900" size={30} />
+      <ButtonGroup
+        selectedIndex={this.state.selectedIndex}
+        onPress={this.SetSelected}
+        buttons={[
+          'Hello',
+          'World',
+          'Buttons',
+          {
+            element: () => <Icon test name="sc-telegram" type="evilicon" color="#517fa4" />,
+          },
+          {
+            element: () => <Icon name="inbox" type="font-awesome" title="Inbox" />,
+          },
+        ]}
+        containerStyle={{ height: 30 }}
+      />
+
       <Button
-        icon={<Icon name="facebook" size={10} color="black" />}
+        icon={{ name: 'inbox', type: 'font-awesome', color: 'white', size: 30 }}
         title="Inbox"
         loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
         titleStyle={{ fontWeight: '700' }}
         buttonStyle={{
           backgroundColor: 'rgba(92, 99,50, 100)',
-          width: 200,
+          width: 150,
+          height: 45,
+          borderColor: 'transparent',
+          borderWidth: 0,
+        }}
+        containerStyle={{ margin: 20 }}
+      />
+      <Button
+        icon={{ name: 'facebook', type: 'font-awesome', color: 'white', size: 30 }}
+        title="sent"
+        loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
+        titleStyle={{ fontWeight: '700' }}
+        buttonStyle={{
+          backgroundColor: 'rgba(92, 99,50, 100)',
+          width: 150,
           height: 45,
           borderColor: 'transparent',
           borderWidth: 0,
