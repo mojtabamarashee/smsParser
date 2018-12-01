@@ -17,6 +17,7 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import { connect } from 'react-redux';
@@ -26,7 +27,8 @@ import { List, ListItem, SearchBar, Button, ButtonGroup, Icon } from 'react-nati
 import Row from './Components/Row.js';
 import Search from './Components/Search.js';
 import { UPDATE_LIST } from './Components/Actions.js';
-//import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon3 from 'react-native-vector-icons/FontAwesome';
 const PersianCalendarPicker = require('react-native-persian-calendar-picker');
 
 const instructions = Platform.select({
@@ -192,53 +194,111 @@ class App extends Component<Props> {
   }
 
   renderHeader = () => (
-    <View>
-      <Icon name="rocket" color="#900" size={30} />
-      <ButtonGroup
-        selectedIndex={this.state.selectedIndex}
-        onPress={this.SetSelected}
-        buttons={[
-          'Hello',
-          'World',
-          'Buttons',
-          {
-            element: () => <Icon test name="sc-telegram" type="evilicon" color="#517fa4" />,
-          },
-          {
-            element: () => <Icon name="inbox" type="font-awesome" title="Inbox" />,
-          },
-        ]}
-        containerStyle={{ height: 30 }}
-      />
 
-      <Button
-        icon={{ name: 'inbox', type: 'font-awesome', color: 'white', size: 30 }}
-        title="Inbox"
-        loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
-        titleStyle={{ fontWeight: '700' }}
-        buttonStyle={{
-          backgroundColor: 'rgba(92, 99,50, 100)',
-          width: 150,
-          height: 45,
-          borderColor: 'transparent',
-          borderWidth: 0,
-        }}
-        containerStyle={{ margin: 20 }}
-      />
-      <Button
-        icon={{ name: 'facebook', type: 'font-awesome', color: 'white', size: 30 }}
-        title="sent"
-        loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
-        titleStyle={{ fontWeight: '700' }}
-        buttonStyle={{
-          backgroundColor: 'rgba(92, 99,50, 100)',
-          width: 150,
-          height: 45,
-          borderColor: 'transparent',
-          borderWidth: 0,
-        }}
-        containerStyle={{ margin: 20 }}
-      />
+    <View>
+      {/*<Icon name="rocket" color="#900" size={30} />*/}
+      <TouchableOpacity>
+        <ButtonGroup
+          selectedIndex={this.state.selectedIndex}
+          onPress={this.SetSelected}
+          selectedButtonStyle={{ backgroundColor: 'blue' }}
+          buttons={[
+            {
+              element: () => (
+                <Icon2.Button
+                  name="slack"
+                  style={{ backgroundColor: 'white' }}
+                  color={'black'}
+                  size={30}
+                  type="font-awesome"
+                  title="Inbox"
+                >
+                  <Text
+                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={1}
+                  >
+                    All
+                  </Text>
+                </Icon2.Button>
+              ),
+            },
+            {
+              //element: () => <Icon name="inbox" size={30} type="font-awesome" title="Inbox" />,
+              element: () => (
+                <Icon3.Button
+                  name="inbox"
+                  style={{ backgroundColor: 'white' }}
+                  color={'black'}
+                  size={30}
+                  type="font-awesome"
+                  title="Inbox"
+                >
+                  <Text
+                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={1}
+                  >
+                    inbox
+                  </Text>
+                </Icon3.Button>
+              ),
+            },
+            {
+              element: () => (
+                <Icon2.Button
+                  name="export"
+                  style={{ backgroundColor: 'white' }}
+                  color={'black'}
+                  size={30}
+                  type="font-awesome"
+                  title="Inbox"
+                >
+                  <Text
+                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={1}
+                  >
+                    sent
+                  </Text>
+                </Icon2.Button>
+              ),
+            },
+          ]}
+          containerStyle={{ height: 30, backgroundColor: 'white' }}
+        />
+
+        {
+          //<Button
+          //  icon={{ name: 'inbox', type: 'font-awesome', color: 'white', size: 30 }}
+          //  title="Inbox"
+          //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
+          //  titleStyle={{ fontWeight: '700' }}
+          //  buttonStyle={{
+          //    backgroundColor: 'rgba(92, 99,50, 100)',
+          //    width: 150,
+          //    height: 45,
+          //    borderColor: 'transparent',
+          //    borderWidth: 0,
+          //  }}
+          //  containerStyle={{ margin: 20 }}
+          ///>
+          //<Button
+          //  icon={{ name: 'facebook', type: 'font-awesome', color: 'white', size: 30 }}
+          //  title="sent"
+          //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
+          //  titleStyle={{ fontWeight: '700' }}
+          //  buttonStyle={{
+          //    backgroundColor: 'rgba(92, 99,50, 100)',
+          //    width: 150,
+          //    height: 45,
+          //    borderColor: 'transparent',
+          //    borderWidth: 0,
+          //  }}
+          //  containerStyle={{ margin: 20 }}
+          ///>
+        }
+      </TouchableOpacity>
     </View>
   );
 
