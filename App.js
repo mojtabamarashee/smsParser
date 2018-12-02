@@ -24,11 +24,12 @@ import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import SmsAndroid from 'react-native-get-sms-android';
 import { List, ListItem, SearchBar, Button, ButtonGroup, Icon } from 'react-native-elements';
+import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon3 from 'react-native-vector-icons/FontAwesome';
 import Row from './Components/Row.js';
 import Search from './Components/Search.js';
 import { UPDATE_LIST } from './Components/Actions.js';
-import Icon2 from 'react-native-vector-icons/AntDesign';
-import Icon3 from 'react-native-vector-icons/FontAwesome';
+
 const PersianCalendarPicker = require('react-native-persian-calendar-picker');
 
 const instructions = Platform.select({
@@ -58,7 +59,12 @@ class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.SMSReadSubscription = {};
-    this.state = { refreshing: false, loading: false, count: 0, selectedIndex: 0 };
+    this.state = {
+      refreshing: false,
+      loading: false,
+      count: 0,
+      selectedIndex: 0,
+    };
     this.arrayholder = [];
     this.SetSelected = this.SetSelected.bind(this);
   }
@@ -191,12 +197,12 @@ class App extends Component<Props> {
 
   SetSelected(index) {
     this.setState({ selectedIndex: index });
+    Alert.alert('hi');
   }
 
   renderHeader = () => (
-
     <View>
-      {/*<Icon name="rocket" color="#900" size={30} />*/}
+      {/* <Icon name="rocket" color="#900" size={30} /> */}
       <TouchableOpacity>
         <ButtonGroup
           selectedIndex={this.state.selectedIndex}
@@ -208,68 +214,85 @@ class App extends Component<Props> {
                 <Icon2.Button
                   name="slack"
                   style={{ backgroundColor: 'white' }}
-                  color={'black'}
+                  onPress={() => this.SetSelected(0)}
+                  color="black"
                   size={30}
                   type="font-awesome"
                   title="Inbox"
                 >
                   <Text
-                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
-                    adjustsFontSizeToFit={true}
+                    style={{
+                      color: 'black',
+                      fontSize: 15,
+                      textAlignVertical: 'center',
+                      textAlign: 'center',
+                    }}
+                    adjustsFontSizeToFit
                     numberOfLines={1}
                   >
                     All
                   </Text>
                 </Icon2.Button>
-              ),
+              )
             },
             {
-              //element: () => <Icon name="inbox" size={30} type="font-awesome" title="Inbox" />,
               element: () => (
                 <Icon3.Button
                   name="inbox"
+                  onPress={() => this.SetSelected(1)}
                   style={{ backgroundColor: 'white' }}
-                  color={'black'}
+                  color="black"
                   size={30}
                   type="font-awesome"
                   title="Inbox"
                 >
                   <Text
-                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
-                    adjustsFontSizeToFit={true}
+                    style={{
+                      color: 'black',
+                      fontSize: 15,
+                      textAlignVertical: 'center',
+                      textAlign: 'center',
+                    }}
+                    adjustsFontSizeToFit
                     numberOfLines={1}
                   >
-                    inbox
+                    sent
                   </Text>
                 </Icon3.Button>
-              ),
+              )
             },
             {
               element: () => (
                 <Icon2.Button
                   name="export"
+                  onPress={() => this.SetSelected(2)}
                   style={{ backgroundColor: 'white' }}
-                  color={'black'}
+                  color="black"
                   size={30}
                   type="font-awesome"
                   title="Inbox"
                 >
                   <Text
-                    style={{ color: 'black', fontSize: 15, textAlignVertical: 'center', textAlign: 'center' }}
-                    adjustsFontSizeToFit={true}
+                    style={{
+                      color: 'black',
+                      fontSize: 15,
+                      textAlignVertical: 'center',
+                      textAlign: 'center',
+                    }}
+                    adjustsFontSizeToFit
                     numberOfLines={1}
                   >
                     sent
                   </Text>
                 </Icon2.Button>
-              ),
+              )
             },
           ]}
           containerStyle={{ height: 30, backgroundColor: 'white' }}
         />
 
         {
-          //<Button
+          // <Button
           //  icon={{ name: 'inbox', type: 'font-awesome', color: 'white', size: 30 }}
           //  title="Inbox"
           //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
@@ -282,8 +305,8 @@ class App extends Component<Props> {
           //    borderWidth: 0,
           //  }}
           //  containerStyle={{ margin: 20 }}
-          ///>
-          //<Button
+          // />
+          // <Button
           //  icon={{ name: 'facebook', type: 'font-awesome', color: 'white', size: 30 }}
           //  title="sent"
           //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
@@ -296,7 +319,7 @@ class App extends Component<Props> {
           //    borderWidth: 0,
           //  }}
           //  containerStyle={{ margin: 20 }}
-          ///>
+          // />
         }
       </TouchableOpacity>
     </View>
