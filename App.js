@@ -203,6 +203,8 @@ class App extends Component<Props> {
     <ButtonGroup
       selectedIndex={this.state.selectedIndex}
       onPress={this.SetSelected}
+      adjustsFontSizeToFit
+      numberOfLines={1}
       buttons={[
         {
           element: () => (
@@ -229,6 +231,7 @@ class App extends Component<Props> {
             </Icon2>
           ),
         },
+        'test',
         {
           element: () => (
             <Icon
@@ -246,33 +249,6 @@ class App extends Component<Props> {
                   textAlignVertical: 'center',
                   textAlign: 'center',
                 }}
-                adjustsFontSizeToFit
-                numberOfLines={1}
-              >
-                in
-              </Text>
-            </Icon>
-          ),
-        },
-        {
-          element: () => (
-            <Icon
-              name="inbox"
-              style={{ backgroundColor: 'white' }}
-              color="black"
-              size={30}
-              type="font-awesome"
-              title="I"
-            >
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: 15,
-                  textAlignVertical: 'center',
-                  textAlign: 'center',
-                }}
-                adjustsFontSizeToFit
-                numberOfLines={1}
               >
                 in
               </Text>
