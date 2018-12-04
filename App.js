@@ -197,132 +197,90 @@ class App extends Component<Props> {
 
   SetSelected(index) {
     this.setState({ selectedIndex: index });
-    Alert.alert('hi');
   }
 
   renderHeader = () => (
-    <View>
-      {/* <Icon name="rocket" color="#900" size={30} /> */}
-      <TouchableOpacity>
-        <ButtonGroup
-          selectedIndex={this.state.selectedIndex}
-          onPress={this.SetSelected}
-          selectedButtonStyle={{ backgroundColor: 'blue' }}
-          buttons={[
-            {
-              element: () => (
-                <Icon2.Button
-                  name="slack"
-                  style={{ backgroundColor: 'white' }}
-                  onPress={() => this.SetSelected(0)}
-                  color="black"
-                  size={30}
-                  type="font-awesome"
-                  title="Inbox"
-                >
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 15,
-                      textAlignVertical: 'center',
-                      textAlign: 'center',
-                    }}
-                    adjustsFontSizeToFit
-                    numberOfLines={1}
-                  >
-                    All
-                  </Text>
-                </Icon2.Button>
-              )
-            },
-            {
-              element: () => (
-                <Icon3.Button
-                  name="inbox"
-                  onPress={() => this.SetSelected(1)}
-                  style={{ backgroundColor: 'white' }}
-                  color="black"
-                  size={30}
-                  type="font-awesome"
-                  title="Inbox"
-                >
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 15,
-                      textAlignVertical: 'center',
-                      textAlign: 'center',
-                    }}
-                    adjustsFontSizeToFit
-                    numberOfLines={1}
-                  >
-                    sent
-                  </Text>
-                </Icon3.Button>
-              )
-            },
-            {
-              element: () => (
-                <Icon2.Button
-                  name="export"
-                  onPress={() => this.SetSelected(2)}
-                  style={{ backgroundColor: 'white' }}
-                  color="black"
-                  size={30}
-                  type="font-awesome"
-                  title="Inbox"
-                >
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 15,
-                      textAlignVertical: 'center',
-                      textAlign: 'center',
-                    }}
-                    adjustsFontSizeToFit
-                    numberOfLines={1}
-                  >
-                    sent
-                  </Text>
-                </Icon2.Button>
-              )
-            },
-          ]}
-          containerStyle={{ height: 30, backgroundColor: 'white' }}
-        />
-
+    <ButtonGroup
+      selectedIndex={this.state.selectedIndex}
+      onPress={this.SetSelected}
+      buttons={[
         {
-          // <Button
-          //  icon={{ name: 'inbox', type: 'font-awesome', color: 'white', size: 30 }}
-          //  title="Inbox"
-          //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
-          //  titleStyle={{ fontWeight: '700' }}
-          //  buttonStyle={{
-          //    backgroundColor: 'rgba(92, 99,50, 100)',
-          //    width: 150,
-          //    height: 45,
-          //    borderColor: 'transparent',
-          //    borderWidth: 0,
-          //  }}
-          //  containerStyle={{ margin: 20 }}
-          // />
-          // <Button
-          //  icon={{ name: 'facebook', type: 'font-awesome', color: 'white', size: 30 }}
-          //  title="sent"
-          //  loadingProps={{ size: 'large', color: 'rgba(111, 202, 186, 1)' }}
-          //  titleStyle={{ fontWeight: '700' }}
-          //  buttonStyle={{
-          //    backgroundColor: 'rgba(92, 99,50, 100)',
-          //    width: 150,
-          //    height: 45,
-          //    borderColor: 'transparent',
-          //    borderWidth: 0,
-          //  }}
-          //  containerStyle={{ margin: 20 }}
-          // />
-        }
-      </TouchableOpacity>
-    </View>
+          element: () => (
+            <Icon2
+              name="slack"
+              style={{ backgroundColor: 'white' }}
+              color="black"
+              size={30}
+              type="font-awesome"
+              title="Inbox"
+            >
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 15,
+                  textAlignVertical: 'center',
+                  textAlign: 'center',
+                }}
+                adjustsFontSizeToFit
+                numberOfLines={1}
+              >
+                All
+              </Text>
+            </Icon2>
+          ),
+        },
+        {
+          element: () => (
+            <Icon
+              name="inbox"
+              style={{ backgroundColor: 'white' }}
+              color="black"
+              size={30}
+              type="font-awesome"
+              title="I"
+            >
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 15,
+                  textAlignVertical: 'center',
+                  textAlign: 'center',
+                }}
+                adjustsFontSizeToFit
+                numberOfLines={1}
+              >
+                in
+              </Text>
+            </Icon>
+          ),
+        },
+        {
+          element: () => (
+            <Icon
+              name="inbox"
+              style={{ backgroundColor: 'white' }}
+              color="black"
+              size={30}
+              type="font-awesome"
+              title="I"
+            >
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 15,
+                  textAlignVertical: 'center',
+                  textAlign: 'center',
+                }}
+                adjustsFontSizeToFit
+                numberOfLines={1}
+              >
+                in
+              </Text>
+            </Icon>
+          ),
+        },
+      ]}
+    />
   );
 
   render() {
