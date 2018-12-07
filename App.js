@@ -199,65 +199,16 @@ class App extends Component<Props> {
     this.setState({ selectedIndex: index });
   }
 
-  renderHeader = () => (
-    <ButtonGroup
-      selectedIndex={this.state.selectedIndex}
-      onPress={this.SetSelected}
-      adjustsFontSizeToFit
-      numberOfLines={1}
-      buttons={[
-        {
-          element: () => (
-            <Icon2
-              name="slack"
-              style={{ backgroundColor: 'white' }}
-              color="black"
-              size={30}
-              type="font-awesome"
-              title="Inbox"
-            >
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: 15,
-                  textAlignVertical: 'center',
-                  textAlign: 'center',
-                }}
-                adjustsFontSizeToFit
-                numberOfLines={1}
-              >
-                All
-              </Text>
-            </Icon2>
-          ),
-        },
-        'test',
-        {
-          element: () => (
-            <Icon
-              name="inbox"
-              style={{ backgroundColor: 'white' }}
-              color="black"
-              size={30}
-              type="font-awesome"
-              title="I"
-            >
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: 15,
-                  textAlignVertical: 'center',
-                  textAlign: 'center',
-                }}
-              >
-                in
-              </Text>
-            </Icon>
-          ),
-        },
-      ]}
-    />
-  );
+  renderHeader = () => {
+    const buttons = ['Hello', 'World', 'Buttons']
+    return (
+      <ButtonGroup
+        selectedIndex={this.state.selectedIndex}
+        onPress={this.SetSelected}
+        buttons={buttons}
+      />
+    );
+  };
 
   render() {
     const { list } = this.props;
